@@ -53,7 +53,7 @@ def earliest_ancestor(ancestors, starting_node):
             if parents == -1:
                 return -1
 
-            # Fr each parent
+            # For each parent
             for parent in parents:
                 # Start a new path
                 new_path = path.copy()
