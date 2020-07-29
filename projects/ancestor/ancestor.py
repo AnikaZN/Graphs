@@ -24,49 +24,76 @@ def get_neighbors(node, ancestors):
     return parents
 
 def earliest_ancestor(ancestors, starting_node):
+    # Create a queue with our first node
     q = Queue()
     q.enqueue([starting_node])
 
+    # Empty set for tracking what we've visited
     visited = set()
 
+    # Create a dictionary where we'll track path lengths and paths
     paths = {}
 
+    # As long as something is in the queue
     while q.size() > 0:
+        # Grab the first thing in the queue
         path = q.dequeue()
+        # Make sure it's just an integer
         current_node = path[-1]
 
+        # As long as we haven't addressed this node before
         if current_node not in visited:
+            # Add it to visited
             visited.add(current_node)
 
+            # Get all parents of the node
             parents = get_neighbors(current_node, ancestors)
 
+            # If it has no parents, return -1
             if parents == -1:
                 return -1
 
+            # Fr each parent
             for parent in parents:
+                # Start a new path
                 new_path = path.copy()
+                # Add the parent to the path
                 new_path.append(parent)
+                # Get the parent's parents
                 grandparents = get_neighbors(parent, ancestors)
 
+                # If there are no "grandparents"
                 if grandparents == -1:
+                    # Make sure to account for duplicate path lengths
+                    # Then add new_path to the paths dict
                     if len(new_path) in paths:
                         paths[len(new_path)].append(new_path)
                     else:
                         paths[len(new_path)] = []
                         paths[len(new_path)].append(new_path)
+                # If there is a grandparent
                 else:
+                    # Add the grandparent to the new_path
                     new_path.append(grandparents[0])
+                    # Add new_path to paths dict
                     paths[len(new_path)] = new_path
 
-            greatest_index = max([k for k in paths])
+            # Get the largest path length
+            greatest_index = max([length for length in paths])
 
-            if type(paths[greatest_index][0]) is not int and len(paths[greatest_index][0]) > 2:
+            # If two ancestors had the same length of path
+            if type(paths[greatest_index][0]) is not int and len(paths[greatest_index][0]) > 1:
+                # Get both of the ancestors
                 ancestors = []
                 for ancestor in paths[greatest_index][0]:
                     ancestors.append(ancestor)
+                # And return the smallest one
                 return min(ancestors)
+            # If it's just an integer, not a list
             elif type(paths[greatest_index][0]) is int:
+                # Return the last integer
                 return paths[greatest_index][-1]
+            # Otherwise, return the last item in the single list
             else:
                 return paths[greatest_index][0][-1]
 
