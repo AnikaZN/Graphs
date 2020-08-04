@@ -129,3 +129,54 @@ if (room == 234 or room == 0) and (most_recent == 'e' and 's' in exits):
             # If next_room != None
             # And next_room not in my_visited_rooms
             direction = most_recent
+
+
+elif most_recent == 'e':
+    if 's' in exits:
+        next_room = player.current_room.get_room_in_direction('s')
+        if next_room not in my_visited_rooms:
+            direction = 's'
+
+        else:
+            next_room = player.current_room.get_room_in_direction(most_recent)
+
+            # If that doesn't work, try going the other "weird" direction
+            if next_room == None:
+                test = weird_inverse(most_recent)
+                next_room = player.current_room.get_room_in_direction(test)
+
+                if next_room == None:
+                    next_room = player.current_room.get_room_in_direction(direction)
+
+                elif next_room.id in my_visited_rooms:
+                    if 'n' in exits:
+                        direction = 'n'
+                        next_room = player.current_room.get_room_in_direction('n')
+                    elif 's' in exits:
+                        direction = 's'
+                        next_room = player.current_room.get_room_in_direction('s')
+
+                else:
+                    direction = test
+
+    else:
+        next_room = player.current_room.get_room_in_direction(most_recent)
+
+        # If that doesn't work, try going the other "weird" direction
+        if next_room == None:
+            test = weird_inverse(most_recent)
+            next_room = player.current_room.get_room_in_direction(test)
+
+            if next_room == None:
+                next_room = player.current_room.get_room_in_direction(direction)
+
+            elif next_room.id in my_visited_rooms:
+                if 'n' in exits:
+                    direction = 'n'
+                    next_room = player.current_room.get_room_in_direction('n')
+                elif 's' in exits:
+                    direction = 's'
+                    next_room = player.current_room.get_room_in_direction('s')
+
+            else:
+                direction = test
